@@ -1,0 +1,43 @@
+GET http://127.0.0.1:8000/api/sub1categories HTTP/1.1
+###
+###
+POST http://127.0.0.1:8000/api/maincategories HTTP/1.1
+content-type: application/json
+Accept: application/json
+
+{  
+    "category":"TEST FINAL",    
+    "code":"ZZZ"     
+}
+###
+PUT http://127.0.0.1:8000/api/maincategories/24 HTTP/1.1
+content-type: application/json
+Accept: application/json
+
+{  
+    "category":"Sample Category 5 Update",    
+    "code":"XX2"     
+}
+###
+POST http://127.0.0.1:8000/api/sub1categories HTTP/1.1
+content-type: application/json
+Accept: application/json
+
+{  
+    "maincategory":2,    
+    "name":"TEST6"     
+}
+###
+PUT http://127.0.0.1:8000/api/sub1categories/1 HTTP/1.1
+content-type: application/json
+//Accept: application/json
+
+{   
+    "name":"TEST1 Update 5"
+}
+###
+DELETE http://127.0.0.1:8000/api/sub1categories/10 HTTP/1.1
+###
+GET http://127.0.0.1:8000/api/sub1categories/1 HTTP/1.1
+
+//Accept: application/json
