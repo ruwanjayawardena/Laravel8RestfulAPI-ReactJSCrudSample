@@ -37,6 +37,7 @@
         "pdfmake": "^0.1.71",
         "react-icons": "^4.2.0",
         "react-router-dom": "^5.2.0",
+        "react-select": "^4.3.0",
         "sweetalert2": "^10.16.0"
     }
 }

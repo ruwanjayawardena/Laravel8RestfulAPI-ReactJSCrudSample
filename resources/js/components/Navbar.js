@@ -7,6 +7,7 @@ import { Route, BrowserRouter as Router, Switch, Link } from "react-router-dom";
 import Dashboard from './Pages/Dashboard';
 import Maincategory from './Pages/Maincategory';
 import Sub1category from './Pages/Sub1category';
+import Samplepage from './Pages/Samplepage';
 import './Fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
@@ -15,7 +16,7 @@ function Navbar() {
         <Router>
             <nav className="navbar navbar-expand-lg navbar-dark shadow sticky-top">            
             <div className="container-fluid">
-                <a className="navbar-brand" href="#"><span className="fs-4 fw-bolder"><img src="https://lh3.googleusercontent.com/proxy/zqwa5Q58xgRMBdYAQsVyKhQZQ4wH3I3Vq3ncJ3FEuv3vc6cxbff2J5IBNIet3mN9j2wAB0hs_P17Kvha60aoqYMLwdKlRdXTFk3A9wK6PlUpiBQa_CZRBbXoPqZJ1t6nGvWrPR-BStSgi4Q2mg" width="80px"/> Sinha Hardware</span><br/><span className="fs-6"><small>Point Of Sale System | Negombo, Sri Lanka</small></span></a>
+                <a className="navbar-brand" href="#"><span className="fs-4 fw-bolder"><FontAwesomeIcon icon="desktop"/> Sinha Hardware</span><span className="fs-5 text-white"> POS</span></a>
                 <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span className="navbar-toggler-icon"></span>
                 </button>
@@ -37,8 +38,8 @@ function Navbar() {
                         </Link>
                     </li>               
                     <li className="nav-item">
-                        <Link to="/sub2category" className="nav-link">
-                            <FontAwesomeIcon icon="sitemap" size="2x"/><br/>Sub Category 2
+                        <Link to="/samplepage" className="nav-link">
+                            <FontAwesomeIcon icon="sitemap" size="2x"/><br/>Sample Page
                         </Link>
                     </li>               
                     <li className="nav-item">
@@ -53,8 +54,7 @@ function Navbar() {
             <Switch>
                 <Route path="/maincategory" component={Maincategory}></Route>
                 <Route path="/sub1category" component={Sub1category}></Route>
-                {/* <Route path="/Sub2category" component={Sub2category}></Route>
-                <Route path="/itemsetup" component={itemsetup}></Route> */}
+                <Route path="/samplepage" component={Samplepage} ></Route> 
                 <Route path="/" component={Dashboard}></Route>
             </Switch>
         </Router>

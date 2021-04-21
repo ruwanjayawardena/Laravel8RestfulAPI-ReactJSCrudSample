@@ -2,6 +2,4 @@
 *.css linguist-vendored
 *.scss linguist-vendored
 *.js linguist-vendored
-*.php linguist-language=Larave8
-*.js linguist-language=ReactJS
 CHANGELOG.md export-ignore

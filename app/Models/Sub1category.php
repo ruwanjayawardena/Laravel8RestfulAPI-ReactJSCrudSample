@@ -16,6 +16,6 @@ class Sub1category extends Model
      */
     protected $fillable = [
         'maincategory',
-        'name',
+        'subcategory',
     ];
 }

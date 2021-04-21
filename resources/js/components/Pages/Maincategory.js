@@ -17,7 +17,7 @@ function Maincategory() {
         //require( ['jquery','jszip', 'pdfmake','datatables.net-bs4','datatables.net-buttons-bs4','datatables.net-buttons/js/buttons.colVis.js','datatables.net-buttons/js/buttons.html5.js','datatables.net-buttons/js/buttons.print.js'], function ($) {
             $('#tbl_maincategory').DataTable( {
                 //responsive:true,
-                ajax: "http://127.0.0.1:8000/api/maincategories/filterdata",
+                ajax: "/api/maincategories/filterdata",
                 destroy : true,                
                 //processing: true,
                 serverSide: true,                
@@ -65,7 +65,7 @@ function Maincategory() {
                         $('.btn-update').prop('hidden',false);
                         $('.btn-save').prop('hidden',true);
                         const id = $(this).val();
-                        const url = 'http://127.0.0.1:8000/api/maincategories/'+id;
+                        const url = '/api/maincategories/'+id;
                         axios.get(url)
                             .then(function (response) {
                             // handle success
@@ -91,7 +91,7 @@ function Maincategory() {
                               }).then((result) => {
                                 if (result.isConfirmed) {
                                     const id = $(this).val();
-                                    const url = 'http://127.0.0.1:8000/api/maincategories/'+id;
+                                    const url = '/api/maincategories/'+id;
                                     axios.delete(url)
                                         .then(function (response) {
                                         // handle success
@@ -118,7 +118,7 @@ function Maincategory() {
 
     //testing purposes
     function loadTable(){ 
-        const url = 'http://127.0.0.1:8000/api/maincategories';      
+        const url = '/api/maincategories';      
 
         axios.get(url)
           .then(function (response) {
@@ -157,7 +157,7 @@ function Maincategory() {
             addEventListener.preventDefault();
             addEventListener.stopPropagation();
         }else{
-            const url = 'http://127.0.0.1:8000/api/maincategories';                   
+            const url = '/api/maincategories';                   
            
             const category = {
                 category: $('#category').val(),
@@ -230,7 +230,7 @@ function Maincategory() {
               }).then((result) => {                  
                 if (result.isConfirmed) {
                     const id = $('#id').val();
-                    const url = 'http://127.0.0.1:8000/api/maincategories/'+id;                    
+                    const url = '/api/maincategories/'+id;                    
                     const category = {
                         category: $('#category').val(),
                         code: $('#code').val()

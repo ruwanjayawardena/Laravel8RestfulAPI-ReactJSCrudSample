@@ -20,6 +20,9 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+//load combo boxes
+Route::get('/cmb/maincategory',[MaincategoryController::class, 'cmbMainCategory']);
+
 // Main Category restful api
 Route::get('/maincategories',[MaincategoryController::class, 'index']);
 Route::post('/maincategories/filterdata',[MaincategoryController::class, 'getDataTableFilterData']);
@@ -30,6 +33,7 @@ Route::delete('/maincategories/{maincategory}',[MaincategoryController::class, '
 
 // Sub1 Category restful api
 Route::get('/sub1categories',[Sub1categoryController::class, 'index']);
+Route::post('/sub1categories/filterdata',[Sub1categoryController::class, 'getDataTableFilterData']);
 Route::post('/sub1categories',[Sub1categoryController::class, 'store']);
 Route::get('/sub1categories/{sub1category}',[Sub1categoryController::class, 'show']);
 Route::put('/sub1categories/{sub1category}',[Sub1categoryController::class, 'update']);

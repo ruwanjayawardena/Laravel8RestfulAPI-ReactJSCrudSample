@@ -24,6 +24,14 @@ class MaincategoryController extends Controller
         ]);
     }
 
+    
+
+    //Load Main category combo box
+    public function cmbMainCategory(Request $request){
+        $maincategory = Maincategory::all()->sortByDesc("category");
+        return response()->json($maincategory);
+    }
+
     public function getDataTableFilterData(Request $request){ 
 
         $recordsTotal = Maincategory::count();
