@@ -7,6 +7,8 @@ import { Route, BrowserRouter as Router, Switch, Link } from "react-router-dom";
 import Dashboard from './Pages/Dashboard';
 import Maincategory from './Pages/Maincategory';
 import Sub1category from './Pages/Sub1category';
+import Sub2category from './Pages/Sub2category';
+import Product from './Pages/Product';
 import Samplepage from './Pages/Samplepage';
 import './Fontawesome';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -38,13 +40,13 @@ function Navbar() {
                         </Link>
                     </li>               
                     <li className="nav-item">
-                        <Link to="/samplepage" className="nav-link">
-                            <FontAwesomeIcon icon="sitemap" size="2x"/><br/>Sample Page
+                        <Link to="/Sub2category" className="nav-link">
+                            <FontAwesomeIcon icon="sitemap" size="2x"/><br/>Sub Category 2
                         </Link>
                     </li>               
                     <li className="nav-item">
-                        <Link to="/itemsetup" className="nav-link">
-                            <FontAwesomeIcon icon="sitemap" size="2x"/><br/>Item Setup
+                        <Link to="/Product" className="nav-link">
+                            <FontAwesomeIcon icon="sitemap" size="2x"/><br/>Product
                         </Link>
                     </li>               
                 </ul>
@@ -54,7 +56,8 @@ function Navbar() {
             <Switch>
                 <Route path="/maincategory" component={Maincategory}></Route>
                 <Route path="/sub1category" component={Sub1category}></Route>
-                <Route path="/samplepage" component={Samplepage} ></Route> 
+                <Route path="/Sub2category" component={Sub2category} ></Route>                
+                <Route path="/Product" component={Product} ></Route>                
                 <Route path="/" component={Dashboard}></Route>
             </Switch>
         </Router>

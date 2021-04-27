@@ -19,10 +19,12 @@ class CreateSub1categoriesTable extends Migration
             $table->unsignedBigInteger('maincategory');            
             $table->foreign('maincategory')->references('id')->on('maincategories')->onDelete('cascade')->onUpdate('cascade');;
             //by default nullable false if not ->nullable($value = true) should add
-            $table->string('subcategory',200)->unique();
+            //$table->string('subcategory',200)->unique();
+            $table->string('subcategory',200);
             //use current timestamp            
             //$table->timestamps(); 
             //alternative method    
+            $table->unique(['subcategory', 'maincategory']);
             $table->timestamp('created_at')->useCurrent();  
             $table->timestamp('updated_at')->useCurrent();     
         });

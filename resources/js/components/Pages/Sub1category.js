@@ -1,82 +1,81 @@
-import React, { useEffect, useState } from 'react';
+import React from "react";
 import axios from 'axios';
+import Select from 'react-select';
 import Swal from 'sweetalert2';
+import '../Datatable';
 import '../Fontawesome';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import '../Datatable';
-import Select from 'react-select';
-import './Samplepage';
-import Samplepage from './Samplepage';
 
+class Sub1category extends React.Component {
+    
+    
+    constructor(props) {
+        super(props);
+        this.state = {
+            cmbMainCategoryOptions:[],
+            selectedMainCategoryID:0,
+            selectedMainCatOption:[]
+        }; 
 
-function Sub1category(props) {
-
-    let [cmbMainCategoryOptions] = useState([]);
-    let [selectedMainCategory] = useState([]);
-    let [selectedMainCategoryID] = useState(0);
-
-
-    const mainCategoryOnChange = (selectedvalue) => {
-        loadDataTable(selectedvalue.value);
-        selectedMainCategory = selectedvalue;
-        //console.log(selectedMainCategory);      
+       //for access this event this keyword need to bind for the function
+       this.onChangeMainCategory = this.onChangeMainCategory.bind(this); 
+       this.cmbMainCategory = this.cmbMainCategory.bind(this);       
+       this.loadDataTable = this.loadDataTable.bind(this);       
+       this.save = this.save.bind(this);       
+       this.clear = this.clear.bind(this);       
+       this.edit = this.edit.bind(this);       
+       
+      
+      this.cmbMainCategory(()=>{        
+        this.loadDataTable();          
+      }); 
     }
 
-    //on load event
-    useEffect(() => {
-        cmbMainCategory(cmbSelectedMainCategory);
-    });
+    // componentDidMount() {
+    //     //this.loadDataTable(this.state.selectedMainCatOption.value)
+    //     //this.cmbMainCategory(); 
+    // }
 
-
-    const samplepageOnChange = (event) =>{
-       // console.log(event);
+    onChangeMainCategory(event){
+        this.setState({selectedMainCatOption:event});        
+        this.loadDataTable(event.value); 
     }
-
-    const cmbSelectedMainCategory = (maincategory_id) => {
-        setSelectedValue();
-        loadDataTable(maincategory_id);
-
-    }
-
-    const getCurrentValue = (event) => {
-        //console.log(event);
-    }
-    const setSelectedValue = () => {
-        return selectedMainCategory;
-    }
-
-    const cmbMainCategory = (callback) => {
-        const url = '/api/cmb/maincategory';
-        // let getSelectedValue = 0;   
+    
+    cmbMainCategory(callback){
+        const self = this;
+        const url = '/api/cmb/maincategory';  
         axios.get(url)
-            .then(function (response) {
-                // handle success             
-                const json = response.data;
-
-                let templabel = "";
-                let cmbOption;
-
-                $.each(json, function (index, maincategory) {
-                    templabel = maincategory.code + '-' + maincategory.category;
-                    cmbOption = { value: maincategory.id, label: templabel }
-                    if (index == 0) {
-                        selectedMainCategory = cmbOption;
-                        selectedMainCategoryID = maincategory.id
-                    }
-                    cmbMainCategoryOptions.push(cmbOption);
-                });           
-
-                if (typeof callback === "function") {
-                    callback(selectedMainCategoryID);
-                }
-            })
-            .catch(function (error) {
-                // handle error
-                console.log(error);
+        .then(function (response) {
+            // handle success             
+            const json = response.data;
+            let templabel = "";
+            let cmbOption;
+            $.each(json, function(index,maincategory) {  
+                templabel = maincategory.code+'-'+maincategory.category;   
+                cmbOption =  {value:maincategory.id,label:templabel}  
+                if(index == 0){
+                    self.setState({selectedMainCatOption:cmbOption});                   
+                } 
+                self.state.cmbMainCategoryOptions.push(cmbOption);
             });
+                        
+            if (callback instanceof Function) {
+                callback();
+            }
+        })
+        .catch(function (error) {
+            // handle error
+            console.log(error);
+        });
     }
 
-    function loadDataTable(maincategory_id) {
+    loadDataTable(maincategory_id) {
+        const self = this;
+        console.log(maincategory_id);
+        if(maincategory_id == 'undefined' || maincategory_id == null){
+            console.log(self.state.selectedMainCatOption);
+            maincategory_id = self.state.selectedMainCatOption.value
+        }
         const tblurl = '/api/sub1categories/filterdata';
         $('#tbl').DataTable({
             processing: true,
@@ -138,8 +137,12 @@ function Sub1category(props) {
                         .then(function (response) {
                             // handle success
                             let jsonData = response.data;
-                            $('#subcategory').val(jsonData.subcategory);
-                            $('#id').val(jsonData.id);
+                            $.each(jsonData,function(index,qData){
+                                $('#subcategory').val(qData.subcategory);
+                                self.setState({selectedMainCatOption:{value:qData.maincategory,label:qData.maincatname}});
+                                $('#id').val(qData.id);
+                            });
+                            
                         })
                         .catch(function (error) {
                             // handle error
@@ -148,7 +151,7 @@ function Sub1category(props) {
                 });
 
                 //delete 
-                $('.btn-deleterow').click(function () {
+                $('.btn-deleterow').click(function () {                                     
                     Swal.fire({
                         title: 'Delete Category!',
                         text: "Are you sure want to delete this?",
@@ -162,7 +165,7 @@ function Sub1category(props) {
                                 .then(function (response) {
                                     // handle success
                                     let jsonData = response.data;
-                                    loadDataTable();
+                                    self.loadDataTable(); 
                                     Swal.fire({
                                         title: 'Delete Category!',
                                         text: jsonData.message,
@@ -180,30 +183,32 @@ function Sub1category(props) {
             }
         });
     }
+    
+    
 
-
-    function save(addEventListener) {
-        addEventListener.preventDefault();
+    save(e) {
+        const self = this;
+        e.preventDefault();
         const form = document.getElementById('frm');
         //form validation add  
         form.classList.add('was-validated');
         if (!form.checkValidity()) {
-            addEventListener.preventDefault();
-            addEventListener.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
         } else {
-            const url = '/api/maincategories';
+            const url = '/api/sub1categories';
 
             const category = {
-                category: $('#category').val(),
-                code: $('#code').val(),
+                maincategory:self.state.selectedMainCatOption.value,
+                subcategory: $('#subcategory').val()                
             };
 
             axios.post(url, category)
                 .then(function (response) {
                     // handle success
                     const jsonData = response.data;
-                    loadDataTable();
                     if (jsonData.msgType == 1) {
+                        self.loadDataTable();
                         Swal.fire({
                             title: 'Save Category!',
                             text: jsonData.message,
@@ -212,7 +217,7 @@ function Sub1category(props) {
                         //form validation remove and clear form after success                              
                         form.reset();
                         form.classList.remove('was-validated');
-                    } else {
+                    } else {                        
                         Swal.fire({
                             title: 'Save Category!',
                             text: jsonData.message,
@@ -229,23 +234,26 @@ function Sub1category(props) {
     }
 
 
-    function clear(addEventListener) {
-        addEventListener.preventDefault();
+    clear(e) {
+        const self = this;
+        e.preventDefault();
         const form = document.getElementById('frm');
         form.reset();
+        self.loadDataTable();
         $('.btn-update').prop('hidden', true);
         $('.btn-save').prop('hidden', false);
         form.classList.remove('was-validated');
     }
 
-    function edit(addEventListener) {
-        addEventListener.preventDefault();
+    edit(e) {
+        const self = this;
+        e.preventDefault();
         const form = document.getElementById('frm');
         //form validation add  
         form.classList.add('was-validated');
         if (!form.checkValidity()) {
-            addEventListener.preventDefault();
-            addEventListener.stopPropagation();
+            e.preventDefault();
+            e.stopPropagation();
         } else {
             Swal.fire({
                 title: 'Update Category!',
@@ -257,15 +265,15 @@ function Sub1category(props) {
                     const id = $('#id').val();
                     const url = '/api/sub1categories/' + id;
                     const category = {
-                        category: $('#subcategory').val(),
-                        code: $('#code').val()
+                        maincategory:self.state.selectedMainCatOption.value,
+                        subcategory: $('#subcategory').val()                        
                     };
                     axios.put(url, category)
                         .then(function (response) {
                             // handle success
-                            const jsonData = response.data;
-                            loadDataTable();
+                            const jsonData = response.data;                            
                             if (jsonData.msgType == 1) {
+                                self.loadDataTable();
                                 Swal.fire({
                                     title: 'Update Category!',
                                     text: jsonData.message,
@@ -276,7 +284,7 @@ function Sub1category(props) {
                                 $('.btn-update').prop('hidden', true);
                                 $('.btn-save').prop('hidden', false);
                                 form.classList.remove('was-validated');
-                            } else {
+                            } else {                                
                                 Swal.fire({
                                     title: 'Update Category!',
                                     text: jsonData.message,
@@ -293,60 +301,58 @@ function Sub1category(props) {
         }
 
     }
-
-    let [selectedMainCategoryTemp] = useState({ value: 2, label: "XCC-Sample Category 2" });
-
-    return (
-        <div className="container py-5 px-2">
-            <div className="row">
-                <h3 className="display-6"><FontAwesomeIcon icon="sitemap" /> Sub Category 1</h3>
-                <p className="lead text-muted fs-6 mb-4">Add, Edit and Delete Main categories</p>
-                <div className="col-12 col-md-5">
-                    <form id="frm" className="needs-validation" noValidate>
-                        <input type="hidden" id="id" />
-                        <div id="yearpiker"></div>
-                        <div className="mb-3">
-                            <Select className="mbMainCategory" defaultValue={setSelectedValue} options={cmbMainCategoryOptions} onChange={mainCategoryOnChange} />
-                            <div className="valid-feedback">Looks good!</div>
-                            <div className="invalid-feedback">Required Field.</div>
-                        </div>
-                        <div className="form-floating mb-3">
-                            <input type="text" className="form-control" id="subcategory" autoComplete="off" required />
-                            <label htmlFor="subcategory">Sub Category</label>
-                            <div className="valid-feedback">Looks good!</div>
-                            <div className="invalid-feedback">Required Field.</div>
-                        </div>
-                        <div className="py-2 d-grid gap-2 d-md-block">
-                            <button type="button" className="btn btn-success text-white btn-save" onClick={save}>
-                                <FontAwesomeIcon icon="save" /> Add
-                             </button>
-                            <button type="button" className="btn ms-1 btn-warning btn-update" onClick={edit} hidden>
-                                <FontAwesomeIcon icon="edit" />  Update
-                             </button>
-                            <button type="button" className="btn ms-1 btn-secondary btn-clear" onClick={clear}>
-                                <FontAwesomeIcon icon="redo-alt" /> Clear
-                             </button>
-                        </div>
-                    </form>
-                </div>
-                <div className="col-12 col-md-7">
-                    <Samplepage pageheading="Hello World" />
-                    <table id="tbl" className="table table-hover table-responsive table-bordered">
-                        <thead className="table-dark">
-                            <tr>
-                                <th scope="col">#</th>
-                                <th scope="col">Category</th>
-                                <th scope="col">Last Updated On</th>
-                                <th scope="col">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+    
+    render() {
+        return (            
+            <div className="container py-5 px-2">
+                <div className="row">
+                    <h3 className="display-6"><FontAwesomeIcon icon="sitemap" /> Sub Category 1</h3>
+                    <p className="lead text-muted fs-6 mb-4">Add, Edit and Delete Sub categories</p>
+                    <div className="col-12 col-md-5">
+                        <form id="frm" className="needs-validation" noValidate>
+                            <input type="hidden" id="id" />                            
+                            <div className="mb-3">
+                            <Select className="mbMainCategory" options={this.state.cmbMainCategoryOptions} value={this.state.selectedMainCatOption} defaultValue={this.state.selectedMainCatOption} onChange={this.onChangeMainCategory}/>
+                                <div className="valid-feedback">Looks good!</div>
+                                <div className="invalid-feedback">Required Field.</div>
+                            </div>
+                            <div className="form-floating mb-3">
+                                <input type="text" className="form-control" id="subcategory" autoComplete="off" required />
+                                <label htmlFor="subcategory">Sub Category</label>
+                                <div className="valid-feedback">Looks good!</div>
+                                <div className="invalid-feedback">Required Field.</div>
+                            </div>
+                            <div className="py-2 d-grid gap-2 d-md-block">
+                                <button type="button" className="btn btn-success text-white btn-save" onClick={this.save}>
+                                    <FontAwesomeIcon icon="save" /> Add
+                                </button>
+                                <button type="button" className="btn ms-1 btn-warning btn-update" onClick={this.edit} hidden>
+                                    <FontAwesomeIcon icon="edit" />  Update
+                                </button>
+                                <button type="button" className="btn ms-1 btn-secondary btn-clear" onClick={this.clear}>
+                                    <FontAwesomeIcon icon="redo-alt" /> Clear
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                    <div className="col-12 col-md-7">                        
+                        <table id="tbl" className="table table-hover table-responsive table-bordered">
+                            <thead className="table-dark">
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Category</th>
+                                    <th scope="col">Last Updated On</th>
+                                    <th scope="col">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
-        </div>
-    )
-}
-
-export default Sub1category
+            );
+        }
+    }
+    
+    export default Sub1category;
